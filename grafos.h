@@ -11,7 +11,12 @@ private:
  vector< vector<int>> matriz_adyacencia;
  map< string,int> nodos;
  int contador;
+ string origen;
  public:
+
+ string getorigen(){
+ return origen;
+ }
 
  grafo(int numero_nodos){
 
@@ -21,13 +26,37 @@ private:
  }
  void insertar_nombres(){
  string nombre;
- for(int i=0; i<contador;i++){
- cout<< "Ingrese el nombre del nodo"<<endl;
+ int i;
+ cout<< "Ingrese el nombre de los nodos"<<endl;
+ cin>> origen;
+ nodos.insert(make_pair(origen,0));
+ i=1;
+ for(int i=1; i<contador;i++){
+
  cin>> nombre;
  nodos.insert(make_pair(nombre,i));
  }
 
 
+
+ }
+ void  Agregar_arista(){
+
+int pos1,pos2;
+for(int i=0;i<contador;i++){
+string a,b;
+int peso;
+cout<< "Ingrese los nodos a conectar"<<endl;
+cout<< "Nodo 1 ->"; cin>> a;
+cout<<"Nodo 2 -> ";cin>> b;
+cout<< "Arista "<< a<< " -> "<< b<< " Creada correctamente"<<endl;
+cout<< "Ingrese el peso de la arista"<<endl;
+cin>> peso;
+pos1= nodos[a];
+pos2= nodos[b];
+ matriz_adyacencia[pos1][pos2]=peso;
+ matriz_adyacencia[pos2][pos1]=peso;
+ }
 
  }
  void DFS(string Nombre, vector<int> visita,int c_recursividad){
@@ -44,8 +73,7 @@ private:
 
 
  for(int i=0;i<contador;i++){
- if((matriz_adyacencia[pos][i]==1)&&(visita[i]==0)){
-
+ if((matriz_adyacencia[pos][i]>0)&&(visita[i]==0)){
  for(auto ite=nodos.begin();ite!=nodos.end();ite++){
 
  if(ite->second==i){
@@ -79,31 +107,26 @@ break;
  pos= nodos[Nodo];
  visita[pos]=1;
  cout<<Nodo<<" ";
- while(i<=contador){
- if((matriz_adyacencia[pos][i]==1)&&(visita[i]==0)){
+
+ while(visita[contador-1]==0){
+ if((matriz_adyacencia[pos][i]>0)&&(visita[i]==0)){
 
 visita[i]=1;
  for(auto ite=nodos.begin();ite!=nodos.end();ite++){
  if(ite->second==i){
  nombre=ite->first;
- i++;
  break;
  }
  }
  cout<<nombre<<" ";
  }
-
- else{
  i++;
- }
+
  if(i==contador){
  i=0;
  pos++;
  }
- if(pos==contador-1){
 
- i=contador+1;
- }
 
 
 
@@ -118,22 +141,51 @@ visita[i]=1;
 
  }
 
+ void Dikjstra(){
+ vector<int>distancia(contador, 214748364);
+vector<bool> visita(contador, false);
+string Nodo, nombre_nodos[contador];
+int origen,u;
+cout<< "Ingrese el nodo de partida"<<endl;
+cin>> Nodo;
+origen= nodos[Nodo];
+distancia[origen] = 0;
+
+for (int i = 0; i< contador ; i++) {
+u=-1;
+for (int j = 0; j< contador; j++) {
+if ((visita[j]!=true) && ((u == -1) || (distancia[j] < distancia[u]))) {
+u = j;
+}
+}
+// Marca el vértice seleccionado como procesado
+visita[u] = true;
+// Actualiza la distancia de los vértices adyacentes del vértice seleccionado
+// se va actualizando las distancias con los vértices adyacentes al origen
+for (int v = 0; v<contador; v++) {
+if ((visita[v]!=true) && (matriz_adyacencia[u][v]!=0) && (distancia[u] + matriz_adyacencia[u][v]<distancia[v])) {
+distancia[v] = distancia[u] + matriz_adyacencia[u][v];
+}
+}
+}
+int i=0;
+for( auto ite= nodos.begin(); ite!=nodos.end();ite++){
+
+nombre_nodos[i]=ite->first;
+i++;
 
 
-void  Agregar_arista(){
+}
+// Imprime las distancias más cortas desde el origen
+for (int i = 0; i < contador; ++i) {
+cout<< "Distancia del nodo "<< Nodo<< " al nodo "<< nombre_nodos[i]<< " es: "<<distancia[i]<<endl;
 
-int pos1,pos2;
-for(int i=0;i<contador;i++){
-string a,b;
-cout<< "Ingrese el nodo a conectar"<<endl;
-cin>> a;
-cout<<"Ingrese el no que conectara con "<< a<<endl;
-cin>> b;
-pos1= nodos[a];
-pos2= nodos[b];
- matriz_adyacencia[pos1][pos2]=1;
- matriz_adyacencia[pos2][pos1]=1;
- }
+
+}
+
+
+
+
 
  }
 
