@@ -158,10 +158,9 @@ if ((visita[j]!=true) && ((u == -1) || (distancia[j] < distancia[u]))) {
 u = j;
 }
 }
-// Marca el vértice seleccionado como procesado
+
 visita[u] = true;
-// Actualiza la distancia de los vértices adyacentes del vértice seleccionado
-// se va actualizando las distancias con los vértices adyacentes al origen
+
 for (int v = 0; v<contador; v++) {
 if ((visita[v]!=true) && (matriz_adyacencia[u][v]!=0) && (distancia[u] + matriz_adyacencia[u][v]<distancia[v])) {
 distancia[v] = distancia[u] + matriz_adyacencia[u][v];
